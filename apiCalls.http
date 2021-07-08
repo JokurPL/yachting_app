@@ -1,0 +1,25 @@
+POST http://localhost:3000/api/offers
+Content-Type: application/json
+
+{
+    "title": "Super fast boat",
+    "mobile": "697347851",
+    "category": "sale",
+    "description": "New boat",
+    "location": "Szczecin/PL",
+    "price": 23000
+}
+
+###
+
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+    "email": "test@gmail.com",
+    "fullName": "Test" ,
+    "password": "123123321"
+}
+
+###
+GET http://localhost:3000/api/offers/paginate
