@@ -30,7 +30,7 @@ export default function airtableIdHome({ offers, offset }) {
   const [currentOffset, setOffset] = useState(offset);
 
   const loadMore = async () => {
-    const response = await jsonFetcher(`/api/offers/paginate?offset=${currentOffset}`);
+    const response = await jsonFetcher(`/api/admin/offers/paginate?offset=${currentOffset}`);
     setOffset(response.offset);
     setOffers([...currentOffers, ...response.offers]);
   };
@@ -47,7 +47,7 @@ export default function airtableIdHome({ offers, offset }) {
   };
 
   const toggleActive = async (offerId) => {
-    const response = await fetch(`/api/offers/${offerId}/toggleActive`, {
+    const response = await fetch(`/api/admin/offers/${offerId}/toggleActive`, {
       method: 'PUT'
     });
 

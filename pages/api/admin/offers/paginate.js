@@ -1,10 +1,10 @@
-import paginateOffers from 'services/offers/paginate';
+import paginateOffers from 'services/offers/allForAdmin';
 
 export default async (req, res) => {
   switch (req.method) {
     case 'GET': {
-      const { offset, category } = req.query;
-      const offers = await paginateOffers(offset, category);
+      const { offset } = req.query;
+      const offers = await paginateOffers(offset);
 
       res.status(200).json({
         offers: offers.records.map((offer) => offer.fields),
