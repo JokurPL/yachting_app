@@ -1,12 +1,12 @@
 import BaseLayout from 'components/BaseLayout';
 import Link from 'next/link';
 import Image from 'next/image';
-import getRecentOffers from 'services/offers/getRecent';
+import getFeaturedOffers from 'services/offers/getFeatured';
 import useSWR from 'swr';
 import { jsonFetcher } from 'utils';
 
 export const getStaticProps = async () => {
-  const offers = await getRecentOffers(4);
+  const offers = await getFeaturedOffers(5);
 
   return {
     props: {

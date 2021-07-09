@@ -24,7 +24,7 @@ export const finalize = async (offerId) => {
       }
     ]);
 
-    return { offer, checkout };
+    return { offer: offer[0].fields, checkout };
   }
 
   return { offer, checkout };
