@@ -7,7 +7,8 @@ const schema = Joi.object({
   mobile: Joi.string().required(),
   description: Joi.string().required(),
   location: Joi.string().required(),
-  price: Joi.number().greater(0).required()
+  price: Joi.number().greater(0).required(),
+  imageUrl: Joi.string()
 });
 
 const createOffer = async (payload, userId) => {

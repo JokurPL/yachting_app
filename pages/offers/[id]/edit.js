@@ -7,6 +7,8 @@ import { getSession } from 'next-auth/client';
 import getOfferById from 'services/offers/get';
 import isAuthorized from 'services/offers/isAuthorized';
 
+import { uploadImage } from 'utils';
+
 export const getServerSideProps = async ({ req, query }) => {
   const session = await getSession({ req });
   const offer = await getOfferById(query.id);
@@ -38,6 +40,13 @@ export default function OfferEdit({ offer }) {
   const [description, setDescription] = useState(offer.description ?? '');
   const [location, setLocation] = useState(offer.location ?? '');
 
+  const [imageUrl, setImageUrl] = useState(offer.imageUrl ?? '');
+
+  const handleImagePreview = (e) => {
+    const url = window.URL.createObjectURL(e.target.files[0]);
+    setImageUrl(url);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -55,6 +64,11 @@ export default function OfferEdit({ offer }) {
       description: form.get('description'),
       location: form.get('location')
     };
+
+    if (form.get('picture')) {
+      const file = await uploadImage(form.get('picture'));
+      payload.imageUrl = file.secure_url;
+    }
 
     const response = await fetch(`/api/offers/${offer.id}`, {
       method: 'PUT',
@@ -179,6 +193,26 @@ export default function OfferEdit({ offer }) {
                     name="description"
                     required
                     className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                </div>
+              </div>
+              {imageUrl && (
+                <div className="p-2 w-full">
+                  <img src={imageUrl} className="rounded" alt="yacht" />
+                </div>
+              )}
+              <div className="p-2 w-full">
+                <div className="relative">
+                  <label htmlFor="picture" className="leading-7 text-sm text-gray-600">
+                    Picture
+                  </label>
+                  <input
+                    onChange={handleImagePreview}
+                    type="file"
+                    id="picture"
+                    name="picture"
+                    required
+                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+                  />
                 </div>
               </div>
               <div className="p-2 w-full">

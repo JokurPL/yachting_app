@@ -20,7 +20,7 @@ export const getServerSideProps = async ({ req, query }) => {
   };
 };
 
-export default function OfferEdit({ offer }) {
+export default function OfferPaymentStatus({ offer }) {
   return (
     <BaseLayout>
       <section className="text-gray-600 body-font relative">
