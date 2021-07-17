@@ -42,7 +42,7 @@ const sendResetToken = async (payload) => {
     subject: 'Change your password', // Subject line
     html: `Hey! <br/> Please change your password here: 
     <a href="${process.env.NEXT_PUBLIC_BASE_URL}/users/updatePassword?token=${resetToken}">
-        ${process.env.NEXT_PUBLIC_BASE_URL}/updatePassword?token=${resetToken}
+        ${process.env.NEXT_PUBLIC_BASE_URL}/forgotPassword?token=${resetToken}
     </a>` // html body
   });
 
