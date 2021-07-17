@@ -36,3 +36,20 @@ Content-Type: application/json
     "offerId": 1,
     "quantity": 1
 }
+
+###
+POST http://localhost:3000/api/users/resetPassword
+Content-Type: application/json
+
+{
+    "email": "admin@example.com"
+}
+
+###
+PUT http://localhost:3000/api/users/resetPassword
+Content-Type: application/json
+
+{
+    "resetToken": "beccaf03255073d8d2f41a99c4b6d2628ce07a0f897fc405992f916d14b6fddc",
+    "password": "admin"
+}

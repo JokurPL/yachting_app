@@ -86,11 +86,14 @@ export default function OfferPage({ offer }) {
                 </button>
               </div>
             </div>
-            {offer.imageUrl && (
-              <div className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center">
-                <Image src={offer.imageUrl} width={800} height={800} className="rounded" />
-              </div>
-            )}
+            <div className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center">
+              <Image
+                src={offer.imageUrl ?? '/noimage.jpg'}
+                width={offer.imageUrl ? 800 : 1200}
+                height={800}
+                className="rounded"
+              />
+            </div>
 
             {isAuthorized(offer, session) && (
               <p>
