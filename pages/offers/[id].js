@@ -37,7 +37,15 @@ export default function OfferPage({ offer }) {
   const router = useRouter();
   const [session] = useSession();
 
-  const [views, setViews] = useState(offer.views);
+  if (router.isFallback) {
+    return (
+      <BaseLayout>
+        <div className="text-center">Loading...</div>
+      </BaseLayout>
+    );
+  }
+
+  const [views, setViews] = useState(offer.views ?? 0);
 
   useEffect(async () => {
     if (offer) {
@@ -57,16 +65,6 @@ export default function OfferPage({ offer }) {
       }
     }
   }, [offer]);
-
-  console.log(offer);
-
-  if (router.isFallback) {
-    return (
-      <BaseLayout>
-        <div className="text-center">Loading...</div>
-      </BaseLayout>
-    );
-  }
 
   return (
     <BaseLayout>
