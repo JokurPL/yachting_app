@@ -9,6 +9,7 @@ import { useSession } from 'next-auth/client';
 import isAuthorized from 'services/offers/isAuthorized';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 export const getStaticPaths = async () => {
   const offers = await getRecent(6);
@@ -36,10 +37,33 @@ export default function OfferPage({ offer }) {
   const router = useRouter();
   const [session] = useSession();
 
+  const [views, setViews] = useState(offer.views);
+
+  useEffect(async () => {
+    if (offer) {
+      const response = await fetch(`/api/offers/${offer.id}/view`, {
+        method: 'POST',
+        body: JSON.stringify({
+          id: offer.id
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const receivedData = await response.json();
+        setViews(receivedData.views);
+      }
+    }
+  }, [offer]);
+
+  console.log(offer);
+
   if (router.isFallback) {
     return (
       <BaseLayout>
-        <div>Loading...</div>
+        <div className="text-center">Loading...</div>
       </BaseLayout>
     );
   }
@@ -61,15 +85,19 @@ export default function OfferPage({ offer }) {
                 </p>
               </div>
               <p className="leading-relaxed mb-4">{offer.description}</p>
-              <div className="flex border-t border-gray-200 py-2">
+              <div className="flex border-t border-gray-400 py-2">
                 <span className="text-gray-500">Location</span>
                 <span className="ml-auto text-gray-900">{offer.location}</span>
               </div>
-              <div className="flex border-t border-gray-200 py-2">
+              <div className="flex border-t border-gray-400  py-2">
                 <span className="text-gray-500">Price</span>
                 <span className="ml-auto text-gray-900">
                   {offer.price.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}
                 </span>
+              </div>
+              <div className="flex border-t border-gray-400 py-2">
+                <span className="text-gray-500">Views</span>
+                <span className="ml-auto text-gray-900">{views ?? 'No views'}</span>
               </div>
               <div className="flex">
                 <span className="title-font font-medium text-2xl text-gray-900">

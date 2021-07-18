@@ -13,7 +13,7 @@ export const getServerSideProps = async () => {
 };
 
 export default function Home({ offers }) {
-  // const { data } = useSWR('/api/offers', jsonFetcher, { initialData: offers });
+  // const { data } = useSWR('/api/offers', jsonFetcher, { initialData: offers }) ;
   return (
     <BaseLayout>
       <section className="text-gray-600 body-font">
@@ -30,7 +30,7 @@ export default function Home({ offers }) {
               including sailing boats, motorboats, and luxury yachts.
             </p>
           </div>
-          <div className="flex flex-wrap -m-4">
+          <div className="flex flex-wrap -m-4 ">
             {offers.map((offer) => (
               <OfferItem offer={offer} key={offer.id} />
             ))}

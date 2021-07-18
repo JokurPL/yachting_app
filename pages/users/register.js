@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import Head from 'next/head';
 
 import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/client';
 
 export default function UserNew() {
   const offerForm = useRef();
@@ -43,6 +44,12 @@ export default function UserNew() {
     });
 
     if (response.ok) {
+      await signIn('credentials', {
+        redirect: false,
+        email: form.get('email'),
+        password: form.get('password')
+      });
+
       router.push('/');
     } else {
       const payload = await response.json();
@@ -130,7 +137,7 @@ export default function UserNew() {
                 <button
                   disabled={formProcessing}
                   className="disabled:opacity-50 flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
-                  {formProcessing ? 'Please wait...' : 'Submit offer'}
+                  {formProcessing ? 'Please wait...' : 'Create account'}
                 </button>
 
                 {error && (

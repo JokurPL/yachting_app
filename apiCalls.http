@@ -53,3 +53,11 @@ Content-Type: application/json
     "resetToken": "beccaf03255073d8d2f41a99c4b6d2628ce07a0f897fc405992f916d14b6fddc",
     "password": "admin"
 }
+
+###
+POST http://localhost:3000/api/offers/23/view
+Content-Type: application/json
+
+{
+    "id": "recLldOm9heM30SkM"
+}

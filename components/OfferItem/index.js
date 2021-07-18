@@ -7,7 +7,7 @@ const OfferItem = ({ offer }) => {
   return (
     <div className="xl:w-1/4 md:w-1/2 p-4 cursor-pointer">
       <Link href={`/offers/${offer.id}`}>
-        <div className="bg-gray-100 p-6 rounded-lg">
+        <div className="bg-gray-300 p-6 rounded-lg">
           <Image
             className="h-40 rounded w-full object-cover object-center mb-6"
             src={offer.imageUrl ?? NO_IMAGE}

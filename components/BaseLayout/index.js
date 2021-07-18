@@ -72,11 +72,18 @@ const TopNavigation = () => {
         )}
 
         {!session && !loading && (
-          <Link href="/users/signin">
-            <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white">
-              <span>Sign in</span>
-            </a>
-          </Link>
+          <>
+            <Link href="/users/signin">
+              <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white">
+                <span>Sign in</span>
+              </a>
+            </Link>
+            <Link href="/users/register">
+              <a className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white">
+                <span>Sign up</span>
+              </a>
+            </Link>
+          </>
         )}
       </div>
     </nav>
