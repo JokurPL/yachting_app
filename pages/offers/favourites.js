@@ -1,8 +1,9 @@
 import BaseLayout from 'components/BaseLayout';
-import getForUser from 'services/offers/getForUser';
+import OfferItem from 'components/OfferItem';
 
 import { getSession } from 'next-auth/client';
-import OfferItem from 'components/OfferItem';
+import getFavouriteUserOffers from 'services/offers/favouriteUserOffers';
+
 export const getServerSideProps = async ({ req }) => {
   const session = await getSession({ req });
 
@@ -14,8 +15,7 @@ export const getServerSideProps = async ({ req }) => {
       }
     };
   }
-  const offers = await getForUser(session.user.email);
-
+  const offers = await getFavouriteUserOffers(session.user.id);
   const userName = session.user.name;
 
   return {
@@ -34,7 +34,7 @@ export default function My({ offers, userName }) {
           <div className="flex flex-wrap w-full mb-20">
             <div className="lg:w-1/2 w-full mb-6 lg:mb-0">
               <h1 className="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">
-                Your offers, {userName}:
+                Your favourite offers, {userName}:
               </h1>
               <div className="h-1 w-20 bg-indigo-500 rounded"></div>
             </div>
@@ -42,7 +42,7 @@ export default function My({ offers, userName }) {
           <div className="flex flex-wrap -m-4">
             {offers.length === 0 && (
               <div className="w-full text-center bg-yellow-100 py-4">
-                You do not have any offers.
+                You do not have any favourite offers.
               </div>
             )}
 

@@ -22,9 +22,7 @@ export default async (req, res) => {
 
         const payload = req.body;
         const userId = session.user.id;
-        console.log(session);
         const offer = await createOffer(payload, userId);
-        console.log(session);
         res.status(200).json({ status: 'created', offer });
       } catch (err) {
         res.status(422).json({ status: 'not_created', err });

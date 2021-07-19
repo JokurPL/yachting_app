@@ -32,5 +32,8 @@
     "stripe": "^8.160.0",
     "swr": "^0.5.6",
     "tailwindcss": "^2.0.3"
+  },
+  "devDependencies": {
+    "faker": "^5.5.3"
   }
 }

@@ -61,3 +61,6 @@ Content-Type: application/json
 {
     "id": "recLldOm9heM30SkM"
 }
+
+###
+GET https://api.airtable.com/v0/appH5H2AN227pudOr/offers?filterByFormula=idFromFavUser%3D7&api_key=keyhYJ1oaVeWK1TXF

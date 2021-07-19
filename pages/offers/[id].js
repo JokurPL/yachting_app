@@ -10,6 +10,7 @@ import isAuthorized from 'services/offers/isAuthorized';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import isFavourite from 'services/offers/isFavourite';
 
 export const getStaticPaths = async () => {
   const offers = await getRecent(6);
@@ -47,6 +48,8 @@ export default function OfferPage({ offer }) {
 
   const [views, setViews] = useState(offer.views ?? 0);
 
+  const [favourite, setFavourite] = useState(isFavourite(offer, session?.user?.id));
+
   useEffect(async () => {
     if (offer) {
       const response = await fetch(`/api/offers/${offer.id}/view`, {
@@ -64,7 +67,44 @@ export default function OfferPage({ offer }) {
         setViews(receivedData.views);
       }
     }
+
+    if (session && session.user) {
+      const response = await fetch(`/api/offers/${offer.id}/isFavourite`, {
+        method: 'POST',
+        body: JSON.stringify({
+          offer: offer,
+          userId: session.user.id
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const receivedData = await response.json();
+        setFavourite(receivedData.favStatus.favourite);
+      }
+    }
   }, [offer]);
+
+  const favouriteAction = async () => {
+    if (session && session.user) {
+      const response = await fetch(`/api/offers/${offer.id}/favourite`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          userId: session.user.id
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const receivedData = await response.json();
+        setFavourite(receivedData.favStatus.favourite);
+      }
+    }
+  };
 
   return (
     <BaseLayout>
@@ -101,19 +141,30 @@ export default function OfferPage({ offer }) {
                 <span className="title-font font-medium text-2xl text-gray-900">
                   {offer.mobile}
                 </span>
-                <button
-                  aria-label="Mark as favourite"
-                  className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
-                  <svg
-                    fill="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-5 h-5"
-                    viewBox="0 0 24 24">
-                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
-                  </svg>
-                </button>
+                {session && session.user ? (
+                  <button
+                    aria-label="Mark as favourite"
+                    onClick={favouriteAction}
+                    className={
+                      favourite
+                        ? 'transition duration-300 ease-in-out rounded-full outline-none w-10 h-10 bg-indigo-500 p-0 border-0 inline-flex items-center justify-center text-white ml-4 focus:outline-none hover:bg-gray-300'
+                        : 'transition duration-300 ease-in-out rounded-full outline-none w-10 h-10 bg-gray-300 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4 focus:outline-none hover:bg-indigo-500 hover:text-white'
+                    }>
+                    <svg
+                      fill="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      className="w-5 h-5"
+                      viewBox="0 0 24 24">
+                      <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
+                    </svg>
+                  </button>
+                ) : (
+                  <span className="rounded-full outline-none w-200 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4 focus:outline-none ">
+                    Login to mark this offer as favourite
+                  </span>
+                )}
               </div>
             </div>
             <div className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center">
