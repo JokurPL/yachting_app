@@ -10,7 +10,7 @@ import isAuthorized from 'services/offers/isAuthorized';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import isFavourite from 'services/offers/isFavourite';
+import isFavouriteSync from 'services/offers/isFavouriteSync';
 
 export const getStaticPaths = async () => {
   const offers = await getRecent(6);
@@ -48,7 +48,7 @@ export default function OfferPage({ offer }) {
 
   const [views, setViews] = useState(offer.views ?? 0);
 
-  const [favourite, setFavourite] = useState(isFavourite(offer, session?.user?.id));
+  const [favourite, setFavourite] = useState(isFavouriteSync(offer, session?.user?.id));
 
   useEffect(async () => {
     console.log('reload');
@@ -82,6 +82,7 @@ export default function OfferPage({ offer }) {
 
         if (response.ok) {
           const receivedData = await response.json();
+          console.log('favcheck; ', receivedData);
           setFavourite(receivedData.favStatus);
         }
       }
