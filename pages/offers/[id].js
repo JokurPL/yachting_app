@@ -51,7 +51,6 @@ export default function OfferPage({ offer }) {
   const [favourite, setFavourite] = useState(isFavouriteSync(offer, session?.user?.id));
 
   useEffect(async () => {
-    console.log('reload');
     if (offer) {
       const response = await fetch(`/api/offers/${offer.id}/view`, {
         method: 'POST',
@@ -67,7 +66,11 @@ export default function OfferPage({ offer }) {
         const receivedData = await response.json();
         setViews(receivedData.views);
       }
+    }
+  }, [offer]);
 
+  useEffect(async () => {
+    if (offer) {
       if (session && session.user) {
         const response = await fetch(`/api/offers/${offer.id}/isFavourite`, {
           method: 'POST',
