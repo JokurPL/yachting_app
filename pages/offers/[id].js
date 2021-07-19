@@ -85,7 +85,6 @@ export default function OfferPage({ offer }) {
 
         if (response.ok) {
           const receivedData = await response.json();
-          console.log('favcheck; ', receivedData);
           setFavourite(receivedData.favStatus);
         }
       }
@@ -130,7 +129,9 @@ export default function OfferPage({ offer }) {
               <p className="leading-relaxed mb-4">{offer.description}</p>
               <div className="flex border-t border-gray-400 py-2">
                 <span className="text-gray-500">Location</span>
-                <span className="ml-auto text-gray-900">{offer.location}</span>
+                <span className="ml-auto text-indigo-500 hover:text-indigo-800">
+                  <Link href={`/cities/${offer.location}`}>{offer.location}</Link>
+                </span>
               </div>
               <div className="flex border-t border-gray-400  py-2">
                 <span className="text-gray-500">Price</span>
