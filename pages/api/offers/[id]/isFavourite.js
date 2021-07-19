@@ -1,10 +1,10 @@
-import { isFavouriteAsync } from 'services/offers/isFavourite';
+import isFavourite from 'services/offers/isFavourite';
 
 export default async (req, res) => {
   switch (req.method) {
-    case 'PUT': {
+    case 'POST': {
       try {
-        const favStatus = await isFavouriteAsync(req.body.offer, req.body.userId);
+        const favStatus = isFavourite(req.body.offer, req.body.userId);
 
         res.status(200).json({ status: 'ok', favStatus });
       } catch (err) {

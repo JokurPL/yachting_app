@@ -51,6 +51,7 @@ export default function OfferPage({ offer }) {
   const [favourite, setFavourite] = useState(isFavourite(offer, session?.user?.id));
 
   useEffect(async () => {
+    console.log('reload');
     if (offer) {
       const response = await fetch(`/api/offers/${offer.id}/view`, {
         method: 'POST',
@@ -66,26 +67,26 @@ export default function OfferPage({ offer }) {
         const receivedData = await response.json();
         setViews(receivedData.views);
       }
-    }
 
-    if (session && session.user) {
-      const response = await fetch(`/api/offers/${offer.id}/isFavourite`, {
-        method: 'POST',
-        body: JSON.stringify({
-          offer: offer,
-          userId: session.user.id
-        }),
-        headers: {
-          'Content-Type': 'application/json'
+      if (session && session.user) {
+        const response = await fetch(`/api/offers/${offer.id}/isFavourite`, {
+          method: 'POST',
+          body: JSON.stringify({
+            offer: offer,
+            userId: session.user.id
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const receivedData = await response.json();
+          setFavourite(receivedData.favStatus);
         }
-      });
-
-      if (response.ok) {
-        const receivedData = await response.json();
-        setFavourite(receivedData.favStatus.favourite);
       }
     }
-  }, [offer]);
+  }, [offer, session]);
 
   const favouriteAction = async () => {
     if (session && session.user) {
