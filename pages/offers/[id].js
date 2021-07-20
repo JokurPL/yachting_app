@@ -48,7 +48,7 @@ export default function OfferPage({ offer }) {
 
   const [views, setViews] = useState(offer.views ?? 0);
 
-  const [favourite, setFavourite] = useState(isFavouriteSync(offer, session?.user?.id));
+  const [favourite, setFavourite] = useState(isFavouriteSync(offer, session?.user?.id) ?? null);
 
   useEffect(async () => {
     if (offer) {
@@ -130,13 +130,23 @@ export default function OfferPage({ offer }) {
               <div className="flex border-t border-gray-400 py-2">
                 <span className="text-gray-500">Location</span>
                 <span className="ml-auto text-indigo-500 hover:text-indigo-800">
-                  <Link href={`/cities/${offer.location}`}>{offer.location}</Link>
+                  <Link href={`/cities/${offer.location}`}>
+                    <a>{offer.location}</a>
+                  </Link>
                 </span>
               </div>
               <div className="flex border-t border-gray-400  py-2">
                 <span className="text-gray-500">Price</span>
                 <span className="ml-auto text-gray-900">
                   {offer.price.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}
+                </span>
+              </div>
+              <div className="flex border-t border-gray-400 py-2">
+                <span className="text-gray-500">Seller</span>
+                <span className="ml-auto text-indigo-500 hover:text-indigo-800">
+                  <Link href={`/users/${offer.users[0]}/offers`}>
+                    <a>{offer.userName}</a>
+                  </Link>
                 </span>
               </div>
               <div className="flex border-t border-gray-400 py-2">
