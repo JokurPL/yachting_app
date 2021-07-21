@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/client';
 import isAuthorized from 'services/offers/isAuthorized';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import isFavouriteSync from 'services/offers/isFavouriteSync';
 
 export const getStaticPaths = async () => {
@@ -46,9 +46,45 @@ export default function OfferPage({ offer }) {
     );
   }
 
+  const userForm = useRef();
+
   const [views, setViews] = useState(offer.views ?? 0);
 
   const [favourite, setFavourite] = useState(isFavouriteSync(offer, session?.user?.id) ?? null);
+
+  const [formProcessing, setFormProcessing] = useState();
+  const [messageSent, setMessageSent] = useState(false);
+  const [error, setError] = useState(null);
+
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    if (formProcessing) return;
+    setError(null);
+    setFormProcessing(true);
+    const form = new FormData(userForm.current);
+    const payload = {
+      receiverId: offer.users[0],
+      senderEmail: session.user.email,
+      message: form.get('message')
+    };
+
+    const response = await fetch('/api/users/sendMessage', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      setFormProcessing(false);
+      setMessageSent(true);
+    } else {
+      const payload = await response.json();
+      setFormProcessing(false);
+      setError(payload.error);
+    }
+  };
 
   useEffect(async () => {
     if (offer) {
@@ -182,6 +218,43 @@ export default function OfferPage({ offer }) {
                   </span>
                 )}
               </div>
+              {session && session.user && !messageSent && (
+                <form onSubmit={sendMessage} ref={userForm} className="pt-5">
+                  <div className="p-3 w-full bg-gray-300 rounded-md">
+                    <label htmlFor="message" className="leading-7 text-lg text-gray-600">
+                      Message for seller
+                    </label>
+                    <textarea
+                      disabled={formProcessing}
+                      id="message"
+                      name="message"
+                      required
+                      className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                  </div>
+                  <div className="p-2 w-full">
+                    <button
+                      disabled={formProcessing}
+                      className="disabled:opacity-50 flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
+                      {formProcessing ? 'Please wait...' : 'Send message'}
+                    </button>
+
+                    {error && (
+                      <div className="flex justify-center w-full my-5">
+                        <span className="bg-red-600 w-full rounded text-white p-3 text-center ">
+                          Message not sent: {error}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </form>
+              )}
+              {messageSent && (
+                <div className="flex justify-center w-full my-5">
+                  <span className="bg-green-600 w-full rounded text-white p-3 text-center ">
+                    Message sent
+                  </span>
+                </div>
+              )}
             </div>
             <div className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center">
               <Image
